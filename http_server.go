@@ -105,11 +105,6 @@ func main() {
 }
 
 func (c *controller) index(w http.ResponseWriter, req *http.Request) {
-	/*if req.URL.Path != "/" {
-		http.NotFound(w, req)
-		return
-	}
-	fmt.Fprintf(w, "Hello, World!\n")*/
 	url, err := url.Parse(fmt.Sprintf("http://%s/", grafanaHost))
 	if err != nil {
 		SendJSONError(w, err.Error())
@@ -118,7 +113,7 @@ func (c *controller) index(w http.ResponseWriter, req *http.Request) {
 	proxy := httputil.NewSingleHostReverseProxy(url)
 
 	fmt.Println(req.URL.Host)
-	req.Header.Set(grafanaHeader, grafanaUser)
+//	req.Header.Set(grafanaHeader, grafanaUser)
 
 	proxy.ServeHTTP(w, req)
 }
