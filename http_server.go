@@ -134,8 +134,8 @@ func (c *controller) logging(hdlr http.Handler) http.Handler {
 				requestID = "unknown"
 			}
 			c.logger.Println(requestID, req.Method, req.URL.Path, req.RemoteAddr, req.UserAgent(), time.Since(start))
-			for k, v := range req.Header {
-                c.logger.Println(requestID, k, v)
+			for _, cookie := range req.Cookies() {
+                fmt.Fprint(w, cookie.Name, cookie.Value)
             }
 		}(time.Now())
 		hdlr.ServeHTTP(w, req)
