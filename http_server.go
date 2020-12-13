@@ -62,6 +62,12 @@ type controller struct {
 	healthy       int64
 }
 
+func SendJSONError(w http.ResponseWriter, msg string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusBadRequest)
+	fmt.Fprintf(w, `{"error":{"msg":%q}}`, msg)
+}
+
 func main() {
 	listenAddr := ":4000"
 	if len(os.Args) == 2 {
@@ -109,10 +115,10 @@ func (c *controller) index(w http.ResponseWriter, req *http.Request) {
 	}
 	proxy := httputil.NewSingleHostReverseProxy(url)
 
-	fmt.Println(r.URL.Host)
-	r.Header.Set(grafanaHeader, grafanaUser)
+	fmt.Println(req.URL.Host)
+	req.Header.Set(grafanaHeader, grafanaUser)
 
-	proxy.ServeHTTP(w, r)
+	proxy.ServeHTTP(w, req)
 }
 
 func (c *controller) healthz(w http.ResponseWriter, req *http.Request) {
